@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf-8>
+		<title>Interactive Graphics</title>
+		<style>
+			body { margin: 0; position: fixed; overflow-y: scroll; width: 100%;}
+			canvas { width: 100%; height: 100% }
+			.overlay {
+				position: fixed;
+				background: #000;
+				opacity: .5;
+				height: 100%;
+				width: 100%;
+				display: none;
+				z-index: 10;
+			}
+			.modal {
+                display: none;
+                position: absolute;
+                background: rgba(9, 8, 8, 0);
+                height: 300px;
+                width: 600px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 998;
+            }
+        
+            /* Modal Content/Box */
+            .modal-content {
+                display: table-cell;
+                background-color: #06020266;
+                border: 5px solid #277b0d;
+                border-radius: 10px;
+                width: 70%;
+                height: 70%;
+				position: relative;
+            }
+
+			#title{
+				text-align: center;
+                font-family: 'minecraftThick';
+                font-weight: bold;
+                font-size: 200%;
+				color: #fff;
+			}
+
+			#next{
+				font-family: 'minecraftThick';
+				position:absolute;
+				bottom:0;
+				right:0;
+				color: #fff;
+				margin-right: 30px;
+				font-size: 150%;
+				cursor: pointer;
+			}
+
+			@font-face {
+				font-family: minecraftThick;
+				src: url('fonts/minecraftThick.ttf');
+			}
+
+		</style>
+	</head>
+	<body>
+        <script src="build/three.js"></script>
+        <script src="js/THREEx.FullScreen.js"></script>
+        <script src="js/THREEx.WindowResize.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/Detector.js"></script>
+		<script src="js/loaders/MTLLoader.js"></script>
+		<script src="js/loaders/OBJLoader.js"></script>
+		<script src="js/loaders/DDSLoader.js"></script>
+		<script src="js/WebGL.js"></script>
+		<script src="js/libs/tween.min.js"></script>
+		<script src="js/THREEx.KeyboardState.js"></script>
+		<script src="gamejs/firstLevel.js" type="module"></script>
+		<script>
+			function showModal(text, buttonText) {
+				document.getElementById('myOverlay').style.display = "block";
+				document.getElementById('myModal').style.display = "table";
+				var paragraph = document.getElementById("title");
+				var text = document.createTextNode(text);
+				paragraph.appendChild(text);
+				var paragraph2 = document.getElementById("next");
+				var text2 = document.createTextNode(buttonText);
+				paragraph2.appendChild(text2);
+			}
+
+			function clearModal(){
+				var paragraph = document.getElementById("title");
+				if(paragraph.hasChildNodes()){
+					paragraph.removeChild(paragraph.childNodes[0]);
+					var paragraph2 = document.getElementById("next");
+					paragraph2.removeChild(paragraph2.childNodes[0]);
+				}
+			}
+		</script>
+
+		<script type="x-shader/x-vertex" id="vertexShader">
+			varying vec3 vWorldPosition;
+
+			void main() {
+
+				vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+				vWorldPosition = worldPosition.xyz;
+
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+
+			}
+		</script>
+
+		<script type="x-shader/x-fragment" id="fragmentShader">
+			uniform vec3 topColor;
+			uniform vec3 bottomColor;
+			uniform float offset;
+			uniform float exponent;
+
+			varying vec3 vWorldPosition;
+
+			void main() {
+
+				float h = normalize( vWorldPosition + offset ).y;
+				gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+
+			}
+		</script>
+
+		<div id="myOverlay" class="overlay"></div>
+		<div id="myModal" class="modal">
+			<div class="modal-content">
+				<p id='title'></p>
+				<p id='next'></p>
+			</div>
+		</div>
+	</body>
+</html>
