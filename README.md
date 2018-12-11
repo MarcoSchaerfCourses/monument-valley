@@ -13,7 +13,15 @@ It consists of three levels with increasing difficulty.
 
 # Game Preview
 ## Level 1
+<img align="center" src="./screenshots/level1.jpg">
 
 ## Level 2
+<img align="center" src="./screenshots/level2.jpg">
 
 ## Level 3
+<img align="center" src="./screenshots/level3.jpg">
+
+# Contributors
+**Fiorella Artuso** (1602113)<br>
+**Andrea Migliori** (1607771)<br>
+**Giovanna Flore** (1612975)<br>
