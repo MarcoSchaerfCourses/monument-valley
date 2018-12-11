@@ -18,6 +18,7 @@ var button2AlreadyBack = false;
 var mesh7AlreadyRotated = false;
 var loaded = false;
 var completed = false;
+var width = 0;
 
 
 export function initSecondLevel(s,r) {
@@ -32,6 +33,7 @@ export function initSecondLevel(s,r) {
     mesh7AlreadyRotated = false;
     loaded = false
     completed = false;
+    width = 0;
 
     //SCENE
     scene = s;
@@ -105,6 +107,9 @@ export function initSecondLevel(s,r) {
     THREEx.WindowResize(renderer, camera);
     THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
     document.getElementById("next").addEventListener('click', goToThirdLevel, false);
+    
+    // LOADING BAR
+    move();
 }
 
 //POPULATE THE SCENE
@@ -460,7 +465,7 @@ function SecondLevel(){
     createBox(-50, -5, 2, 0.75, -Math.PI/2, 0, 0);
     createHouse(-165, 65, -100, 0.2, 0, Math.PI/6, 0);
     createCandyStick(190, 0, 60, 0.5, -Math.PI/2, 0, -Math.PI/4);
-    createtree(90, 0, 160, 0.5, -Math.PI/2, 0, 0);
+    createTree(90, 0, 160, 0.5, -Math.PI/2, 0, 0);
     createClouds(160, 5, 70, Math.PI/6, 0.05);
 
 
@@ -867,7 +872,7 @@ function createBox(x,y,z,scale,rx,ry,rz){
                     object.rotateX(rx);
                     object.rotateY(ry);
                     object.rotateZ(rz);
-
+                    width += 20;
                     scene.add( object );
 
                 }, onProgress, onError );
@@ -907,9 +912,8 @@ function createHouse(x,y,z,scale,rx,ry,rz){
                     object.rotateX(rx);
                     object.rotateY(ry);
                     object.rotateZ(rz);
-
                     lastTower = object;
-
+                    width += 20;
                     scene.add( object );
 
                 }, onProgress, onError );
@@ -948,14 +952,14 @@ function createCandyStick(x,y,z,scale,rx,ry,rz){
                     object.rotateX(rx);
                     object.rotateY(ry);
                     object.rotateZ(rz);
-
+                    width += 20;
                     scene.add( object );
 
                 }, onProgress, onError );
         } );
 }
 
-function createtree(x,y,z,scale,rx,ry,rz){
+function createTree(x,y,z,scale,rx,ry,rz){
     var onProgress = function ( xhr ) {
         if ( xhr.lengthComputable ) {
             var percentComplete = xhr.loaded / xhr.total * 100;
@@ -987,7 +991,7 @@ function createtree(x,y,z,scale,rx,ry,rz){
                     object.rotateX(rx);
                     object.rotateY(ry);
                     object.rotateZ(rz);
-
+                    width += 20;
                     scene.add( object );
 
                     loaded = true;
@@ -1023,6 +1027,7 @@ function createClouds(x, y, z, angle, scale){
             object.scale.x = scale;
             object.scale.y = scale;
             object.scale.z = scale;
+            width += 20;
             scene.add( object );
 
         }, onProgress, onError );
@@ -1157,6 +1162,53 @@ var simulateRain = function(){
   
     particles.verticesNeedUpdate = true;
   };
+
+function move() {
+    var elem = document.getElementById("myBar");
+    var text = document.getElementById("titleLoading");
+    var text2 = document.getElementById("loadingText");
+    
+    if (text.hasChildNodes()){
+        text.removeChild(text.childNodes[0]);
+        text2.removeChild(text2.childNodes[0]);
+    }
+
+    text.appendChild(document.createTextNode("LEVEL 2"));
+    text2.appendChild(document.createTextNode("Loading:"));
+    
+    /* RESET */
+    elem.style.width = width + '%';
+    elem.innerHTML = width * 1 + '%';
+    document.getElementById('myLoading').style.opacity = 1;
+    document.getElementById('myLoading').style.display = "block";
+    
+    var id = setInterval(frame, 10);
+    function frame() {
+        if (width >= 100) {
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1 + '%';
+            clearInterval(id);
+            fade(document.getElementById('myLoading'));
+        }
+        else {
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1 + '%';
+        }
+    }
+}
+
+function fade(element) {
+    var op = 1;
+    var timer = setInterval(function () {
+        if (op <= 0.1) {
+           clearInterval(timer);
+           element.style.display = 'none';
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.1;
+    }, 50);
+}
 
 
 //GO TO THIRD LEVEL

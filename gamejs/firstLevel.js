@@ -15,6 +15,7 @@ var wheelID;
 var frameID;
 
 var scale = 1;
+var width = 0;
 
 var elevatorup = false;
 var lastElevatorUp = false;
@@ -57,6 +58,7 @@ export function initFirstLevel(s, r) {
     canMoveWalter = true;
     translateCollision = true;
     rotateWalterFrontal = true;
+    width = 0;
     
     // SCENE
 	scene = s;
@@ -104,6 +106,9 @@ export function initFirstLevel(s, r) {
 	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
     document.addEventListener('mousedown', mouseDown, false);
     document.getElementById("next").addEventListener('click', goToSecondLevel, false);
+    
+    // LOADING BAR
+    move();
 	
 }
 
@@ -540,7 +545,7 @@ function createWheel(){
             object.rotateY(Math.PI/2);
 
             wheelID = object.id;
-            
+            width += 20;
             scene.add( object );
 
         }, onProgress, onError );
@@ -574,6 +579,7 @@ function createClouds(x, y, z, angle, scale){
             object.scale.x = scale;
             object.scale.y = scale;
             object.scale.z = scale;
+            width += 20;
             scene.add( object );
 
         }, onProgress, onError );
@@ -610,16 +616,64 @@ function createIsland(){
                     object.scale.y = 30;
                     object.scale.z = 30;
                     object.rotateY(Math.PI/2);
-
+                    width += 20;
                     scene.add( object );
 
                 }, onProgress, onError );
         } );
 }
 
+function move() {
+    var elem = document.getElementById("myBar");
+    var id = setInterval(frame, 10);
+    var text = document.getElementById("titleLoading");
+    var text2 = document.getElementById("loadingText");
+    
+    
+    if (text.hasChildNodes()) {
+        text.removeChild(text.childNodes[0]);
+        text2.removeChild(text2.childNodes[0]);
+    }
+
+    text.appendChild(document.createTextNode("LEVEL 1"));
+    text2.appendChild(document.createTextNode("Loading:"));
+
+    /* RESET */
+    elem.style.width = width + '%';
+    elem.innerHTML = width * 1 + '%';
+    document.getElementById('myLoading').style.opacity = 1;
+    document.getElementById('myLoading').style.display = "block";
+    
+    function frame() {
+        if (width >= 100) {
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1 + '%';
+            clearInterval(id);
+            fade(document.getElementById('myLoading'));
+        }
+        else {
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1 + '%';
+        }
+    }
+}
+
+function fade(element) {
+    var op = 1;
+    var timer = setInterval(function () {
+            if (op <= 0.1) {
+                        clearInterval(timer);
+                        element.style.display = 'none';
+                    }
+                    element.style.opacity = op;
+                    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+                    op -= op * 0.1;
+                }, 50);
+}
+
 
 //PASS TO SECOND LEVEL
-function goToSecondLevel(){
+function goToSecondLevel() {
     document.getElementById('myModal').style.display = "none";
     document.getElementById('myOverlay').style.display = "none";
     while(scene.children.length > 0){
@@ -633,18 +687,3 @@ function goToSecondLevel(){
     createSecondLevel();
     animateSecondLevel();
 }
-
-/*function goToThirdLevel(){
-    document.getElementById('myModal').style.display = "none";
-    document.getElementById('myOverlay').style.display = "none";
-    while(scene.children.length > 0){
-        scene.remove(scene.children[0]);
-    }
-    document.removeEventListener('mousedown', mouseDown, false);
-    document.getElementById("next").removeEventListener('click', goToThirdLevel, false);
-    cancelAnimationFrame(frameID);
-    renderer.render( scene, camera );
-    initThirdLevel(scene, renderer);
-    createThirdLevel();
-    animateThirdLevel();
-}*/

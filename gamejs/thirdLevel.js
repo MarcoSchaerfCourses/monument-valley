@@ -19,6 +19,8 @@ var towerRotated = false;
 var buttonPressed = false;
 var completed = false;
 
+var width = 0;
+
 
 export function initThirdLevel(s, r) {
 
@@ -35,6 +37,7 @@ export function initThirdLevel(s, r) {
     towerRotated = false;
     buttonPressed = false;
     completed = false;
+    width = 0;
     
     // SCENE
     scene = s;
@@ -83,6 +86,9 @@ export function initThirdLevel(s, r) {
     THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
     document.addEventListener('mousedown', mouseDown, false);
     document.getElementById("next").addEventListener('click', goToFirstLevel, false);
+    
+    // LOADING BAR
+    move();
 }
 
 
@@ -546,10 +552,6 @@ function ThirdLevel(){
     walter.body.position.x = -66.89564944833867;
     walter.body.position.y = -66.5;
     walter.body.position.z = 4.3603783001210843;
-    
-    /*walter.body.position.x = -39.26157561742835;
-    walter.body.position.y = -21.6;
-    walter.body.position.z = -25.11624837450779;*/
     
     walter.body.rotateY(-Math.PI);
 }
@@ -1046,6 +1048,7 @@ function createArch(x, y, z, angle, scale, last){
                 lastArch = object;
                 lastArch.visible = false;
             }
+            width += 17;
             scene.add( object );
 
         }, onProgress, onError );
@@ -1080,7 +1083,7 @@ function createMoon(){
                     object.scale.x = 0.12;
                     object.scale.y = 0.12;
                     object.scale.z = 0.12;
-                    //object.rotateY(Math.PI/2);
+                    width += 17;
 
                     scene.add( object );
 
@@ -1117,7 +1120,7 @@ function createEarth(){
                     object.scale.x = 15;
                     object.scale.y = 15;
                     object.scale.z = 15;
-                    //object.rotateY(Math.PI/2);
+                    width += 17;
 
                     scene.add( object );
 
@@ -1155,6 +1158,7 @@ function createSaturn(){
                     object.scale.y = 0.1;
                     object.scale.z = 0.1;
                     object.rotateX(Math.PI/2);
+                    width += 17;
 
                     scene.add( object );
 
@@ -1273,6 +1277,55 @@ function createMovablesWithTexture(geometry){
     texture3.needsUpdate = true;
     return mesh
 }
+
+function move() {
+    var elem = document.getElementById("myBar");
+    var id = setInterval(frame, 10);
+    var text = document.getElementById("titleLoading");
+    var text2 = document.getElementById("loadingText");
+    
+    
+    if (text.hasChildNodes()){
+        text.removeChild(text.childNodes[0]);
+        text2.removeChild(text2.childNodes[0]);
+    }
+    
+    text.appendChild(document.createTextNode("LEVEL 3"));
+    text2.appendChild(document.createTextNode("Loading:"));
+    
+    /* RESET */
+    elem.style.width = width + '%';
+    elem.innerHTML = width * 1 + '%';
+    document.getElementById('myLoading').style.opacity = 1;
+    document.getElementById('myLoading').style.display = "block";
+    
+    function frame() {
+        if (width >= 100) {
+            elem.style.width = 100 + '%';
+            elem.innerHTML = 100 * 1 + '%';
+            clearInterval(id);
+            fade(document.getElementById('myLoading'));
+        }
+        else {
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1 + '%';
+        }
+    }
+}
+
+function fade(element) {
+    var op = 1;
+    var timer = setInterval(function () {
+                            if (op <= 0.1) {
+                            clearInterval(timer);
+                            element.style.display = 'none';
+                            }
+                            element.style.opacity = op;
+                            element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+                            op -= op * 0.1;
+                            }, 50);
+}
+
 
 //PASS TO FIRST LEVEL
 function goToFirstLevel(){
