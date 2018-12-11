@@ -5,11 +5,14 @@ This project is a simplified version of Monument Valley game in which the charac
 
 It consists of three levels with increasing difficulty.
 
+
 # Game Demo
 [Click here to play the game](https://marcoschaerfcourses.github.io/monument-valley/)
 
+
 # Game report
 [Click here to read the report](https://github.com/MarcoSchaerfCourses/monument-valley/blob/master/report.pdf)
+
 
 # Game Preview
 ## Level 1
@@ -20,6 +23,7 @@ It consists of three levels with increasing difficulty.
 
 ## Level 3
 <img align="center" src="./screenshots/level3.jpg">
+
 
 # Contributors
 **Fiorella Artuso** (1602113)<br>
