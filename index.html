@@ -6,7 +6,8 @@
 		<style>
 			body { margin: 0; position: fixed; overflow-y: scroll; width: 100%;}
 			canvas { width: 100%; height: 100% }
-			.overlay {
+			
+            .overlay {
 				position: fixed;
 				background: #000;
 				opacity: .5;
@@ -15,6 +16,7 @@
 				display: none;
 				z-index: 10;
 			}
+        
 			.modal {
                 display: none;
                 position: absolute;
@@ -27,7 +29,6 @@
                 z-index: 998;
             }
         
-            /* Modal Content/Box */
             .modal-content {
                 display: table-cell;
                 background-color: #06020266;
@@ -37,8 +38,17 @@
                 height: 70%;
 				position: relative;
             }
+        
+            .loading {
+                position: fixed;
+                background: #000;
+                opacity: 1;
+                height: 100%;
+                width: 100%;
+                z-index: 10;
+            }
 
-			#title{
+			#title {
 				text-align: center;
                 font-family: 'minecraftThick';
                 font-weight: bold;
@@ -46,7 +56,7 @@
 				color: #fff;
 			}
 
-			#next{
+			#next {
 				font-family: 'minecraftThick';
 				position:absolute;
 				bottom:0;
@@ -56,6 +66,47 @@
 				font-size: 150%;
 				cursor: pointer;
 			}
+        
+            #titleLoading {
+                text-align: center;
+                font-family: 'minecraftThick';
+                font-weight: bold;
+                font-size: 750%;
+                color: #277b0d;
+            }
+        
+            #loadingText {
+                font-family: 'minecraftThick';
+                font-weight: bold;
+                font-size: 200%;
+                color: #ffffff;
+                position: absolute;
+                left: 25%;
+                
+            }
+        
+            #myProgress {
+                position: relative;
+                display: block;
+                top: 15%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                border-radius: 10px;
+                width: 50%;
+                background-color: grey;
+                border: 3px solid #277b0d;
+            }
+        
+            #myBar {
+                width: 0%;
+                height: 30px;
+                background-color: #277b0d;
+                text-align: center;
+                line-height: 30px;
+                font-size: 150%;
+                font-family: 'Impact';
+                color: white;
+            }
 
 			@font-face {
 				font-family: minecraftThick;
@@ -135,5 +186,13 @@
 				<p id='next'></p>
 			</div>
 		</div>
+        
+        <div id="myLoading" class="loading">
+            <p id="titleLoading"></p>
+            <p id="loadingText"></p>
+            <div id="myProgress">
+                <div id="myBar"></div>
+            </div>
+        </div>
 	</body>
 </html>
